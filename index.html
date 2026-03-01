@@ -27,11 +27,34 @@ body { font-family: var(--font-sans); color: var(--ink); font-size: 15px; line-h
 /* NAV */
 .nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--gray-200); padding: 0 2rem; }
 .nav-inner { max-width: var(--max-w); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 56px; }
-.nav-brand { font-family: var(--font-sans); font-weight: 700; font-size: .9rem; letter-spacing: .1em; text-transform: uppercase; color: var(--navy); }
+.nav-brand { font-family: var(--font-sans); font-weight: 700; font-size: .9rem; letter-spacing: .1em; text-transform: uppercase; color: var(--navy); flex-shrink: 0; }
 .nav-brand span { color: var(--accent); }
-.nav-links { display: flex; gap: 1.5rem; list-style: none; }
-.nav-links a { font-size: .75rem; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--gray-500); text-decoration: none; transition: color .2s; }
-.nav-links a:hover, .nav-links a.active { color: var(--accent); }
+.nav-links { display: flex; gap: .25rem; list-style: none; align-items: center; }
+.nav-links > li { position: relative; }
+.nav-links > li > a { font-size: .75rem; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--gray-500); text-decoration: none; transition: color .2s; padding: .5rem .65rem; border-radius: 4px; display: inline-flex; align-items: center; gap: .3rem; }
+.nav-links > li > a:hover, .nav-links > li > a.active { color: var(--accent); }
+.nav-links > li > a.active { background: var(--accent-light); }
+/* Dropdown */
+.nav-drop { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); min-width: 200px; background: #fff; border: 1px solid var(--gray-200); border-radius: 8px; box-shadow: var(--shadow-md); padding: .5rem 0; margin-top: .35rem; }
+.nav-links > li:hover .nav-drop, .nav-links > li.drop-open .nav-drop { display: block; }
+.nav-drop a { display: block; font-size: .8rem; font-weight: 500; color: var(--gray-600); text-decoration: none; padding: .55rem 1.1rem; transition: background .15s, color .15s; text-transform: none; letter-spacing: 0; }
+.nav-drop a:hover { background: var(--gray-50); color: var(--accent); }
+.nav-drop a.active { color: var(--accent); font-weight: 600; }
+.drop-arrow { font-size: .55rem; opacity: .5; }
+/* Hamburger */
+.nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: .5rem; color: var(--ink); }
+.nav-hamburger svg { width: 22px; height: 22px; }
+/* Mobile */
+@media (max-width: 900px) {
+  .nav-hamburger { display: block; }
+  .nav-links { display: none; position: absolute; top: 56px; left: 0; right: 0; background: #fff; border-bottom: 1px solid var(--gray-200); box-shadow: var(--shadow-md); flex-direction: column; padding: .75rem 1.5rem 1rem; gap: 0; }
+  .nav-links.open { display: flex; }
+  .nav-links > li > a { padding: .65rem .5rem; display: block; font-size: .85rem; }
+  .nav-drop { position: static; transform: none; box-shadow: none; border: none; padding: 0 0 0 1rem; margin: 0; min-width: auto; }
+  .nav-links > li:hover .nav-drop { display: none; }
+  .nav-links > li.drop-open .nav-drop { display: block; }
+  .nav-drop a { padding: .45rem .5rem; font-size: .82rem; }
+}
 
 /* SECTIONS */
 .section { padding: 4rem 2rem; }
@@ -179,7 +202,6 @@ body { font-family: var(--font-sans); color: var(--ink); font-size: 15px; line-h
 @media (max-width: 600px) {
   .kpi-grid { grid-template-columns: 1fr; }
   .hero-stats { flex-direction: column; align-items: center; }
-  .nav-links { display: none; }
 }
 .explorer-sidebar::-webkit-scrollbar { width: 5px; }
 .explorer-sidebar::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
@@ -190,16 +212,29 @@ body { font-family: var(--font-sans); color: var(--ink); font-size: 15px; line-h
 
 <nav class="nav"><div class="nav-inner">
   <div class="nav-brand">WAR<span>LAB</span></div>
+  <button class="nav-hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
   <ul class="nav-links">
-    <li><a href="#framework" onclick="showTab('framework')">Framework</a></li>
-    <li><a href="#dashboard" onclick="showTab('dashboard')">Dashboard</a></li>
-    <li><a href="#methodology" onclick="showTab('methodology')">Methodology</a></li>
-    <li><a href="#explorer" onclick="showTab('explorer')" class="active">Explorer</a></li>
-    <li><a href="#role-mapping" onclick="showTab('role-mapping')">Role Mapping</a></li>
-    <li><a href="#swp" onclick="showTab('swp')">SWP</a></li>
-    <li><a href="#redesign" onclick="showTab('redesign')">Job Hierarchy Redesign</a></li>
-    <li><a href="#runbook" onclick="showTab('runbook')">Implementation Runbook</a></li>
-    <li><a href="#exports" onclick="showTab('exports')">Export</a></li>
+    <li><a href="#framework" onclick="navTo('framework')">Framework</a></li>
+    <li><a href="#dashboard" onclick="navTo('dashboard')">Dashboard</a></li>
+    <li>
+      <a href="#methodology" onclick="toggleDrop(event, this)">About <span class="drop-arrow">&#9660;</span></a>
+      <div class="nav-drop">
+        <a href="#methodology" onclick="navTo('methodology')">Methodology &amp; Sources</a>
+        <a href="#runbook" onclick="navTo('runbook')">Implementation Runbook</a>
+        <a href="#exports" onclick="navTo('exports')">Export Data</a>
+      </div>
+    </li>
+    <li><a href="#explorer" onclick="navTo('explorer')" class="active">Explorer</a></li>
+    <li>
+      <a href="#role-mapping" onclick="toggleDrop(event, this)">Advisory <span class="drop-arrow">&#9660;</span></a>
+      <div class="nav-drop">
+        <a href="#role-mapping" onclick="navTo('role-mapping')">Role Mapping</a>
+        <a href="#swp" onclick="navTo('swp')">Strategic Workforce Planning</a>
+        <a href="#redesign" onclick="navTo('redesign')">Job Hierarchy Redesign</a>
+      </div>
+    </li>
   </ul>
 </div></nav>
 
@@ -891,11 +926,37 @@ function showTab(id) {
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
   const tab = document.getElementById(id);
   if (tab) tab.classList.add('active');
-  const link = document.querySelector('.nav-links a[href="#' + id + '"]');
-  if (link) link.classList.add('active');
+  // Mark matching link active (could be in dropdown or top-level)
+  document.querySelectorAll('.nav-links a[href="#' + id + '"]').forEach(a => a.classList.add('active'));
+  // Also mark parent dropdown trigger active if the link is inside a dropdown
+  const dropLink = document.querySelector('.nav-drop a.active');
+  if (dropLink) {
+    const parentLi = dropLink.closest('li');
+    if (parentLi) { const trigger = parentLi.querySelector(':scope > a'); if (trigger) trigger.classList.add('active'); }
+  }
   window.location.hash = id;
   window.scrollTo(0, 0);
 }
+function navTo(id) {
+  showTab(id);
+  // Close mobile menu and any open dropdowns
+  document.querySelector('.nav-links').classList.remove('open');
+  document.querySelectorAll('.nav-links > li.drop-open').forEach(li => li.classList.remove('drop-open'));
+}
+function toggleDrop(e, el) {
+  e.preventDefault();
+  const li = el.closest('li');
+  const isOpen = li.classList.contains('drop-open');
+  // Close all dropdowns first
+  document.querySelectorAll('.nav-links > li.drop-open').forEach(l => l.classList.remove('drop-open'));
+  if (!isOpen) li.classList.add('drop-open');
+}
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.nav-links')) {
+    document.querySelectorAll('.nav-links > li.drop-open').forEach(li => li.classList.remove('drop-open'));
+  }
+});
 
 function shortL1(name) {
   const map = {

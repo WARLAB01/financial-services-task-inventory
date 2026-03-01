@@ -198,6 +198,7 @@ body { font-family: var(--font-sans); color: var(--ink); font-size: 15px; line-h
     <li><a href="#role-mapping" onclick="showTab('role-mapping')">Role Mapping</a></li>
     <li><a href="#swp" onclick="showTab('swp')">SWP</a></li>
     <li><a href="#redesign" onclick="showTab('redesign')">Job Hierarchy Redesign</a></li>
+    <li><a href="#runbook" onclick="showTab('runbook')">Implementation Runbook</a></li>
     <li><a href="#exports" onclick="showTab('exports')">Export</a></li>
   </ul>
 </div></nav>
@@ -495,6 +496,355 @@ body { font-family: var(--font-sans); color: var(--ink); font-size: 15px; line-h
   </div>
 
   <div class="callout gold" style="margin-top:1.5rem"><strong>Summary:</strong> The task inventory provides the raw material that Hay evaluations require &mdash; but captured systematically at scale rather than through role-by-role interviews. By aggregating task-level Know-How (skills, Bloom's, regulatory knowledge), Problem Solving (Bloom's distribution, cross-functional scope), and Accountability (defense line, importance, impact scope), organizations can draft Hay-aligned role evaluations directly from the data, dramatically accelerating the job architecture redesign process.</div>
+</div></section>
+
+<section class="section tab-content" id="runbook"><div class="section-inner">
+  <div class="section-label">Technical Guide</div>
+  <div class="section-title">Implementation Runbook</div>
+  <p class="section-subtitle">How to recreate and extend this analysis internally, combining your organization's proprietary data with the external reference inventory.</p>
+
+  <div class="callout blue">This inventory was built entirely from external, publicly available data. Its value as a <strong>reference model</strong> is that it provides a validated starting point &mdash; a comprehensive task taxonomy, scoring engine, and enrichment schema &mdash; that any organization can adapt without starting from scratch. The sections below describe exactly how to do that.</div>
+
+  <h3 style="margin-top:2rem;color:var(--ink)">Reusable Artifacts from This Analysis</h3>
+  <p>The following outputs from this project can be used directly in your internal implementation. They represent significant upfront work that does not need to be repeated:</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0">
+    <div class="card" style="border-left:3px solid var(--accent)">
+      <h4>4-Level Taxonomy Structure</h4>
+      <p>The hierarchy of 15 L1 Functions &rarr; 92 L2 Processes &rarr; 368 L3 Activities provides a ready-made classification framework. Your organization can adopt it as-is or modify branches to reflect your specific operating model.</p>
+      <p style="font-size:.85rem;color:var(--gray-500);margin-top:.5rem"><strong>Export:</strong> Full JSON from the Export Center. Extract unique L1/L2/L3 combinations to get the taxonomy tree.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--accent)">
+      <h4>Reference Task Library (1,545 tasks)</h4>
+      <p>Each task is a verb-object statement with a full description, skills, roles, and classification metadata. Use as a starting checklist: walk through each L3 activity and confirm which tasks exist in your org, which need rewording, and which are missing.</p>
+      <p style="font-size:.85rem;color:var(--gray-500);margin-top:.5rem"><strong>Export:</strong> Full CSV. Filter by L1 function to produce function-specific worksheets for SME validation.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--accent)">
+      <h4>18-Field Task Schema</h4>
+      <p>The schema (task_id, task_name, task_description, L1&ndash;L3, SOC codes, roles, importance, frequency, Bloom's, regulatory, cross-functional, AI score, disposition, skills, defense line, source) is designed for analytical versatility. Adopt it as your internal data standard.</p>
+      <p style="font-size:.85rem;color:var(--gray-500);margin-top:.5rem"><strong>Export:</strong> JSON schema is self-documenting. See the Methodology tab for field definitions.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--accent)">
+      <h4>AI Exposure Scoring Engine</h4>
+      <p>The 7-factor scoring algorithm (input structure, output determinism, judgment requirement, data availability, creativity, regulatory constraint, digitization) can be applied to any task inventory. Weights are transparent and adjustable.</p>
+      <p style="font-size:.85rem;color:var(--gray-500);margin-top:.5rem"><strong>Export:</strong> The scoring logic is documented in the Methodology tab. The runbook below provides pseudocode for reimplementation.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--accent)">
+      <h4>O*NET SOC Code Mappings</h4>
+      <p>Each task is linked to O*NET Standard Occupational Classification codes, connecting the inventory to the U.S. Department of Labor's occupational database (knowledge requirements, education levels, wage data, projected growth).</p>
+      <p style="font-size:.85rem;color:var(--gray-500);margin-top:.5rem"><strong>Export:</strong> SOC codes are included in every CSV/JSON export. Cross-reference against the free O*NET 30.2 database.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--accent)">
+      <h4>Hay Method Mapping Framework</h4>
+      <p>The Job Hierarchy Redesign tab documents how inventory fields map to Hay's three evaluation factors (Know-How, Problem Solving, Accountability). This mapping template accelerates Hay-aligned job architecture work.</p>
+      <p style="font-size:.85rem;color:var(--gray-500);margin-top:.5rem"><strong>Export:</strong> Conceptual framework documented in the Redesign tab. Apply it to your org-specific task data.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:2.5rem;color:var(--ink)">Internal Data Sources to Integrate</h3>
+  <p>To move from a reference model to an org-specific analysis, you need to overlay your proprietary data. Here are the key internal sources and what they contribute:</p>
+
+  <table class="def-table"><thead><tr><th>Internal Source</th><th>What It Provides</th><th>How It Integrates</th></tr></thead><tbody>
+    <tr><td><strong>HRIS / Workday</strong></td><td>Job titles, headcount, grades, compensation bands, reporting lines, org structure</td><td>Map job titles to reference tasks (Role Mapping step 1). Headcount-weight the analysis to show FTE impact, not just task count.</td></tr>
+    <tr><td><strong>Job Descriptions (JDs)</strong></td><td>Official role responsibilities, qualifications, competency requirements</td><td>Validate and customize the reference task list. Add org-specific tasks not in the external inventory. Confirm Bloom's levels match internal expectations.</td></tr>
+    <tr><td><strong>Process Maps / SOPs</strong></td><td>Documented workflows, system touchpoints, handoff points</td><td>Validate L2/L3 taxonomy alignment. Identify tasks that are split across roles differently than the reference model assumes.</td></tr>
+    <tr><td><strong>Time &amp; Motion / Activity Data</strong></td><td>How staff actually spend their time (if available from workforce analytics tools)</td><td>Replace estimated effort weights with actual observed data. This is the single highest-value internal dataset for this analysis.</td></tr>
+    <tr><td><strong>Learning Management System (LMS)</strong></td><td>Training records, certifications, competency assessments</td><td>Map to skills_required to identify existing capability vs. gaps. Feeds directly into SWP skill gap analysis.</td></tr>
+    <tr><td><strong>Hay / Korn Ferry Evaluations</strong></td><td>Existing job evaluation scores, grade structures, point profiles</td><td>Compare current Hay grades against the task-derived grades from the Hierarchy Redesign framework. Identify misalignment between current grading and actual task composition.</td></tr>
+    <tr><td><strong>Incident / Issue Registers</strong></td><td>Operational errors, compliance findings, audit issues</td><td>Correlate with task-level data to identify which tasks (and therefore roles) are highest risk. Informs importance scoring and defense line validation.</td></tr>
+    <tr><td><strong>Technology Inventory</strong></td><td>Systems, platforms, automation tools currently in use</td><td>Informs the &ldquo;current digitization&rdquo; scoring factor. Tasks performed on modern platforms score higher for AI readiness.</td></tr>
+  </tbody></table>
+
+  <h3 style="margin-top:2.5rem;color:var(--ink)">External Data Sources (Publicly Available)</h3>
+  <p>These are the external sources used to build this reference inventory. All are freely or commercially available:</p>
+
+  <table class="def-table"><thead><tr><th>Source</th><th>Access</th><th>What to Extract</th></tr></thead><tbody>
+    <tr><td><strong>O*NET 30.2 Database</strong></td><td>Free download: <code>onetonline.org</code></td><td>Task statements, knowledge domains, skills, abilities, education requirements, and wage data for 1,000+ occupations. Filter by SOC codes relevant to financial services (13-xxxx, 15-xxxx, 43-xxxx).</td></tr>
+    <tr><td><strong>Regulatory Frameworks</strong></td><td>FINTRAC, OSFI, Basel III/IV, IFRS 9, TCFD &mdash; all published online</td><td>Compliance obligations that generate regulatory-driven tasks. These define the &ldquo;non-negotiable&rdquo; task layer that cannot be eliminated.</td></tr>
+    <tr><td><strong>Professional Certifications</strong></td><td>CFA Institute, GARP (FRM), (ISC)&sup2; (CISSP), FINRA</td><td>Certification body-of-knowledge outlines define the skill and knowledge standards for professional roles. Use to validate skills_required fields.</td></tr>
+    <tr><td><strong>Industry Job Postings</strong></td><td>Careers pages, Indeed, LinkedIn, Glassdoor</td><td>Real-world role descriptions and responsibilities. Useful for validating that the inventory covers actual market roles (see the BMO Coverage Analysis for an example of this validation).</td></tr>
+    <tr><td><strong>Bloom&rsquo;s Taxonomy Reference</strong></td><td>Standard educational framework (widely published)</td><td>Provides the 6-level cognitive complexity scale: Remember (1), Understand (2), Apply (3), Analyze (4), Evaluate (5), Create (6). Used to score each task.</td></tr>
+  </tbody></table>
+
+  <h3 style="margin-top:2.5rem;color:var(--ink)">Data Scientist Runbook</h3>
+  <p>The following is a step-by-step technical guide for a data scientist to build the internal integration pipeline. Each step includes the inputs, outputs, and pseudocode logic.</p>
+
+  <div class="advisory-step"><div class="step-num">1</div><div><h3>Load &amp; Validate the Reference Inventory</h3>
+    <p>Start by loading the reference data and confirming its structure.</p>
+    <div class="example-box" style="font-family:monospace;font-size:.85rem;line-height:1.7;white-space:pre-wrap;background:var(--gray-50)"><strong># Step 1: Load reference inventory</strong>
+import pandas as pd, json
+
+with open('task_inventory.json') as f:
+    ref = json.load(f)
+
+ref_tasks = pd.DataFrame(ref['tasks'])
+print(f"Reference: {len(ref_tasks)} tasks, {ref_tasks.L1_function.nunique()} L1 functions")
+print(f"Schema: {list(ref_tasks.columns)}")
+
+# Validate: no nulls in key fields
+assert ref_tasks[['task_id','task_name','L1_function','L2_process','L3_activity']].notna().all().all()
+
+# Extract taxonomy tree for reuse
+taxonomy = ref_tasks[['L1_function','L2_process','L3_activity']].drop_duplicates().sort_values(
+    ['L1_function','L2_process','L3_activity']
+)</div>
+  </div></div>
+
+  <div class="advisory-step"><div class="step-num">2</div><div><h3>Load Internal HRIS Data &amp; Build Role&ndash;Task Map</h3>
+    <p>Pull your HRIS export and map each internal job title to reference tasks. This is the most labor-intensive step and typically requires SME input.</p>
+    <div class="example-box" style="font-family:monospace;font-size:.85rem;line-height:1.7;white-space:pre-wrap;background:var(--gray-50)"><strong># Step 2: Load HRIS and build role-task mapping</strong>
+
+hris = pd.read_csv('hris_export.csv')  # columns: employee_id, job_title, department, grade, fte_count
+print(f"HRIS: {hris.job_title.nunique()} unique titles, {hris.fte_count.sum()} FTEs")
+
+# Option A: Manual mapping worksheet (SME-assisted)
+# Export reference tasks by L1, have SMEs mark which tasks apply to each job title
+role_task_map = pd.read_csv('role_task_mapping.csv')  # columns: job_title, task_id, effort_pct
+
+# Option B: Automated fuzzy matching (augments manual mapping)
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Match JD text against reference task descriptions
+jd_texts = load_job_descriptions()  # your JD corpus
+ref_descs = ref_tasks['task_description'].tolist()
+
+vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
+tfidf = vectorizer.fit_transform(ref_descs + jd_texts)
+ref_vecs = tfidf[:len(ref_descs)]
+jd_vecs = tfidf[len(ref_descs):]
+
+similarities = cosine_similarity(jd_vecs, ref_vecs)
+# For each JD, get top-N matching reference tasks above threshold
+THRESHOLD = 0.25
+for i, jd_title in enumerate(jd_titles):
+    top_matches = similarities[i].argsort()[::-1][:20]
+    matched = [(ref_tasks.iloc[j].task_id, similarities[i][j])
+               for j in top_matches if similarities[i][j] > THRESHOLD]</div>
+  </div></div>
+
+  <div class="advisory-step"><div class="step-num">3</div><div><h3>Add Org-Specific Tasks</h3>
+    <p>The reference inventory covers the industry broadly but won't capture every organization-specific process. Add custom tasks using the same schema.</p>
+    <div class="example-box" style="font-family:monospace;font-size:.85rem;line-height:1.7;white-space:pre-wrap;background:var(--gray-50)"><strong># Step 3: Add org-specific tasks</strong>
+
+# Use the same 18-field schema
+custom_tasks = []
+custom_tasks.append({
+    'task_id': 'CUSTOM.RB.001',        # prefix with CUSTOM to distinguish
+    'task_name': 'Process Internal Transfer via Proprietary Platform',
+    'task_description': 'Execute inter-branch account transfers using [OrgSystem]...',
+    'L1_function': 'Retail Banking',
+    'L2_process': 'Deposit Products &amp; Services',
+    'L3_activity': 'Transaction Processing',
+    'onet_soc_codes': ['43-3071.00'],
+    'primary_roles': ['Branch Operations Specialist'],
+    'importance': 3,
+    'frequency': 'Daily',
+    'cognitive_complexity': 2,           # Bloom's level
+    'regulatory_driven': False,
+    'cross_functional': False,
+    'ai_exposure_score': None,           # will be scored in Step 4
+    'ai_disposition': None,
+    'skills_required': ['Core Banking System', 'Transaction Processing'],
+    'defense_line': '1st',
+    'source': 'Internal'
+})
+
+# Merge with reference
+all_tasks = pd.concat([ref_tasks, pd.DataFrame(custom_tasks)], ignore_index=True)</div>
+  </div></div>
+
+  <div class="advisory-step"><div class="step-num">4</div><div><h3>Apply the AI Exposure Scoring Engine</h3>
+    <p>Score any new or modified tasks using the 7-factor algorithm. The engine is deterministic and keyword-driven &mdash; it can be applied to any task that follows the schema.</p>
+    <div class="example-box" style="font-family:monospace;font-size:.85rem;line-height:1.7;white-space:pre-wrap;background:var(--gray-50)"><strong># Step 4: Score AI exposure (7-factor engine)</strong>
+
+def score_ai_exposure(task):
+    score = 0
+    desc = task['task_description'].lower()
+    bloom = task['cognitive_complexity']
+    regulatory = task['regulatory_driven']
+
+    # Factor 1: Input Structure (0-18)
+    structured = ['process','calculate','reconcile','verify data','enter','monitor metric',
+                  'balance','payment','transaction','filing','report','extract','validate']
+    semi = ['analyze','review','evaluate','assess','investigate','examine','monitor']
+    unstructured = ['negotiate','advise','design','develop strategy','build relationship',
+                    'coach','present','persuade','formulate','orchestrate']
+    if any(kw in desc for kw in structured): score += 18
+    elif any(kw in desc for kw in semi): score += 10
+    elif any(kw in desc for kw in unstructured): score += 3
+    else: score += 10
+
+    # Factor 2: Output Determinism (0-18)
+    deterministic = ['file report','generate report','calculate','reconcile','balance',
+                     'process payment','execute transfer','data entry','verify']
+    probabilistic = ['analyze','assess risk','evaluate','score','classify','screen','model']
+    subjective = ['recommend','advise','negotiate','design','structure deal','judgment',
+                  'strategy','create','formulate']
+    if any(kw in desc for kw in deterministic): score += 18
+    elif any(kw in desc for kw in probabilistic): score += 10
+    elif any(kw in desc for kw in subjective): score += 2
+    else: score += 10
+
+    # Factor 3: Judgment Requirement (-10 to +15) — based on Bloom's
+    score += {1:15, 2:15, 3:8, 4:0, 5:-5, 6:-10}.get(bloom, 0)
+
+    # Factor 4: Data Availability (0-13)
+    data_rich = ['transaction','payment','account','balance','report','metric','portfolio',
+                 'statement','records','system','database','position','trade','holdings']
+    if any(kw in desc for kw in data_rich): score += 13
+    elif any(kw in desc for kw in ['analyze','review','evaluate','model']): score += 8
+    else: score += 3
+
+    # Factor 5: Creativity Needed (-3 to +10)
+    routine = ['process','execute','file','submit','verify','reconcile','monitor','track']
+    creative = ['design','develop strategy','create','customize','structure','innovate']
+    if any(kw in desc for kw in routine): score += 10
+    elif any(kw in desc for kw in creative): score -= 3
+    else: score += 5
+
+    # Factor 6: Regulatory Constraint (-8 to +8)
+    if regulatory:
+        heavy = ['fintrac','sanctions','approval decision','lending authority',
+                 'compliance testing','enforcement','prospectus','osfi']
+        score += -8 if any(kw in desc for kw in heavy) else -3
+    else:
+        score += 8
+
+    # Factor 7: Current Digitization (0-9)
+    digital = ['digital','online','system','automated','platform','api','software','ai']
+    manual = ['on-site','field','branch','vault','physical','in-person','face-to-face']
+    if any(kw in desc for kw in digital): score += 9
+    elif any(kw in desc for kw in manual): score += 2
+    else: score += 5
+
+    return max(0, min(100, score))
+
+def assign_disposition(score, bloom, regulatory):
+    if score >= 75:
+        return 'Augment' if (regulatory and bloom >= 4) else 'Automate'
+    elif score >= 50:
+        return 'Augment'
+    elif score >= 30:
+        return 'Augment' if bloom >= 3 else 'Restructure'
+    else:
+        return 'No_Change' if bloom >= 5 else 'Restructure'
+
+# Apply to all tasks missing scores
+for idx, row in all_tasks[all_tasks.ai_exposure_score.isna()].iterrows():
+    all_tasks.at[idx, 'ai_exposure_score'] = score_ai_exposure(row)
+    all_tasks.at[idx, 'ai_disposition'] = assign_disposition(
+        all_tasks.at[idx, 'ai_exposure_score'],
+        row['cognitive_complexity'], row['regulatory_driven']
+    )</div>
+  </div></div>
+
+  <div class="advisory-step"><div class="step-num">5</div><div><h3>Build Role-Level Profiles</h3>
+    <p>Aggregate task data up to the role level to produce the analytical outputs described in Role Mapping and Job Hierarchy Redesign.</p>
+    <div class="example-box" style="font-family:monospace;font-size:.85rem;line-height:1.7;white-space:pre-wrap;background:var(--gray-50)"><strong># Step 5: Aggregate to role-level profiles</strong>
+
+merged = role_task_map.merge(all_tasks, on='task_id')
+merged = merged.merge(hris[['job_title','fte_count','grade']].drop_duplicates(), on='job_title')
+
+role_profiles = merged.groupby('job_title').agg(
+    task_count=('task_id', 'count'),
+    fte_count=('fte_count', 'first'),
+    current_grade=('grade', 'first'),
+    # Know-How proxies (Hay)
+    unique_skills=('skills_required', lambda x: len(set(s for sl in x for s in sl))),
+    max_bloom=('cognitive_complexity', 'max'),
+    mean_bloom=('cognitive_complexity', 'mean'),
+    l2_breadth=('L2_process', 'nunique'),
+    # Problem Solving proxies (Hay)
+    bloom_std=('cognitive_complexity', 'std'),
+    pct_cross_functional=('cross_functional', 'mean'),
+    # Accountability proxies (Hay)
+    primary_defense_line=('defense_line', lambda x: x.mode().iloc[0]),
+    mean_importance=('importance', 'mean'),
+    pct_regulatory=('regulatory_driven', 'mean'),
+    # AI exposure
+    weighted_ai_score=('ai_exposure_score', lambda x: (x * merged.loc[x.index, 'effort_pct']).sum()),
+    pct_automate=('ai_disposition', lambda x: (x == 'Automate').mean()),
+    pct_augment=('ai_disposition', lambda x: (x == 'Augment').mean()),
+    pct_no_change=('ai_disposition', lambda x: (x == 'No_Change').mean()),
+).round(2)
+
+# Derive suggested Hay career level from Bloom's
+def suggest_level(max_bloom):
+    if max_bloom <= 2: return 'Associate'
+    elif max_bloom <= 3: return 'Analyst'
+    elif max_bloom <= 4: return 'Senior / Specialist'
+    else: return 'Lead / Director'
+
+role_profiles['suggested_level'] = role_profiles.max_bloom.apply(suggest_level)</div>
+  </div></div>
+
+  <div class="advisory-step"><div class="step-num">6</div><div><h3>Generate Hierarchy Redesign Outputs</h3>
+    <p>Use the role profiles to produce the deliverables described in the advisory sections.</p>
+    <div class="example-box" style="font-family:monospace;font-size:.85rem;line-height:1.7;white-space:pre-wrap;background:var(--gray-50)"><strong># Step 6: Analytical outputs</strong>
+
+# A. Skill gap matrix
+current_skills = load_lms_data()  # skills held by current staff
+required_skills = merged.explode('skills_required').groupby(
+    ['job_title','skills_required']).size().unstack(fill_value=0)
+gap_matrix = required_skills.subtract(current_skills, fill_value=0)
+
+# B. Role consolidation candidates
+from itertools import combinations
+for (r1, r2) in combinations(role_profiles.index, 2):
+    tasks_r1 = set(merged[merged.job_title==r1].task_id)
+    tasks_r2 = set(merged[merged.job_title==r2].task_id)
+    overlap = len(tasks_r1 &amp; tasks_r2) / len(tasks_r1 | tasks_r2)
+    if overlap > 0.6:
+        print(f"Consolidation candidate: {r1} + {r2} (overlap: {overlap:.0%})")
+
+# C. Hay evaluation draft
+for title, profile in role_profiles.iterrows():
+    print(f"
+--- {title} (current grade: {profile.current_grade}) ---")
+    print(f"Know-How:  {profile.unique_skills} skills, "
+          f"max Bloom {profile.max_bloom}, {profile.l2_breadth} L2 processes")
+    print(f"Problem Solving: mean Bloom {profile.mean_bloom:.1f}, "
+          f"std {profile.bloom_std:.1f}, {profile.pct_cross_functional:.0%} cross-functional")
+    print(f"Accountability: {profile.primary_defense_line} line, "
+          f"importance {profile.mean_importance:.1f}, {profile.pct_regulatory:.0%} regulatory")
+    print(f"Suggested level: {profile.suggested_level}")
+
+# D. SWP scenario model
+def model_scenario(roles_df, automate_threshold):
+    # Model headcount impact if tasks above threshold are automated.
+    at_risk = roles_df[roles_df.pct_automate > automate_threshold]
+    fte_impact = at_risk.fte_count.sum() * at_risk.pct_automate.mean()
+    return {'roles_affected': len(at_risk), 'estimated_fte_impact': round(fte_impact)}
+
+conservative = model_scenario(role_profiles, 0.5)
+balanced = model_scenario(role_profiles, 0.3)
+aggressive = model_scenario(role_profiles, 0.15)</div>
+  </div></div>
+
+  <div class="advisory-step"><div class="step-num">7</div><div><h3>Validate &amp; Iterate</h3>
+    <p>Quality assurance steps before presenting results to stakeholders.</p>
+    <ul>
+      <li><strong>SME Review:</strong> Have business leads review the role&ndash;task mapping for their function. Flag tasks that are missing, misattributed, or obsolete.</li>
+      <li><strong>Bloom's Calibration:</strong> Spot-check 10% of tasks per L1 function to confirm cognitive complexity ratings match SME judgment.</li>
+      <li><strong>Hay Cross-Check:</strong> Compare derived Hay profiles against existing evaluations (if available). Large discrepancies indicate either scoring issues or genuinely misgraded roles.</li>
+      <li><strong>Coverage Test:</strong> Confirm that every internal job title maps to at least 5 reference tasks. Titles with &lt;5 matches may indicate gaps in the inventory or misclassification.</li>
+      <li><strong>Defense Line Audit:</strong> Verify no role mixes 1st-line and 2nd/3rd-line tasks. Flag violations for review with Risk and Compliance.</li>
+    </ul>
+  </div></div>
+
+  <h3 style="margin-top:2.5rem;color:var(--ink)">Pipeline Architecture Summary</h3>
+  <div class="callout gold" style="font-size:.95rem">
+    <strong>Data Flow:</strong> Reference Inventory (JSON) + HRIS Export + Job Descriptions + LMS Data &rarr; Role&ndash;Task Mapping (manual + fuzzy match) &rarr; Org-Specific Task Inventory (merged) &rarr; Scoring Engine (AI exposure + Bloom's) &rarr; Role Profiles (aggregated) &rarr; Analytical Outputs (Hay evaluation drafts, skill gap matrices, consolidation candidates, SWP scenarios)
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin:1.5rem 0">
+    <div class="card" style="text-align:center"><h4 style="color:var(--accent)">Estimated Effort</h4><p>4&ndash;8 weeks for a mid-sized bank (&lt;20k FTEs). Primary bottleneck is SME validation of role&ndash;task mappings (Step 2).</p></div>
+    <div class="card" style="text-align:center"><h4 style="color:var(--gold)">Team Composition</h4><p>1 data scientist (pipeline), 1 HR/workforce planning analyst (mapping), SMEs from each L1 function (validation), 1 project lead.</p></div>
+    <div class="card" style="text-align:center"><h4 style="color:var(--green)">Technology Stack</h4><p>Python (pandas, scikit-learn), any SQL database for storage, BI tool (Power BI / Tableau) for visualization, Excel for SME worksheets.</p></div>
+  </div>
+
+  <div class="callout green"><strong>Getting Started:</strong> Export the full JSON from the Export Center. That file contains the complete reference inventory, ready to load into your pipeline as Step 1. The Role Mapping Template CSV provides a blank worksheet for Step 2.</div>
 </div></section>
 
 <section class="section tab-content" id="exports"><div class="section-inner">

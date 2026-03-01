@@ -388,67 +388,113 @@ body { font-family: var(--font-sans); color: var(--ink); font-size: 15px; line-h
 <section class="section tab-content" id="redesign"><div class="section-inner">
   <div class="section-label">Advisory Framework</div>
   <div class="section-title">Job Hierarchy Redesign</div>
-  <p class="section-subtitle">Using the task inventory to rethink how roles, job families, and organizational layers are structured.</p>
+  <p class="section-subtitle">Using the task inventory to rethink how roles, job families, and organizational layers are structured &mdash; grounded in the Hay Method for job evaluation.</p>
   <div class="callout blue">The task inventory reveals what people <em>actually do</em> at the L4 level. This makes it possible to challenge existing job boundaries, identify where roles can be consolidated or split, and design a future-state hierarchy grounded in real task clusters rather than inherited org charts.</div>
 
   <h3 style="margin-top:2rem;color:var(--ink)">The Problem with Current Job Hierarchies</h3>
-  <p>Most financial services job hierarchies evolved organically &mdash; roles were added, titles inflated, and boundaries hardened around legacy processes. When AI changes which tasks require human effort, the hierarchy itself may no longer make sense. Two symptoms emerge:</p>
+  <p>Most financial services job hierarchies evolved organically &mdash; roles were added, titles inflated, and boundaries hardened around legacy processes. When the underlying work changes (through technology, regulation, or market shifts), the hierarchy itself may no longer reflect the actual nature of the work being done. Two symptoms emerge:</p>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0">
-    <div class="card"><h4 style="color:var(--red)">Fragmented Roles</h4><p>A single end-to-end process is split across 3&ndash;5 job titles, each owning a narrow slice. When AI automates the slice, the role has no remaining critical mass.</p></div>
-    <div class="card"><h4 style="color:var(--gold)">Bloated Roles</h4><p>A single title bundles unrelated tasks from different L2 processes. The role holder is a generalist by accident, not design &mdash; making AI adoption and upskilling harder.</p></div>
+    <div class="card"><h4 style="color:var(--red)">Fragmented Roles</h4><p>A single end-to-end process is split across 3&ndash;5 job titles, each owning a narrow slice. The result: duplicated skills, unclear accountability, and roles that lack the critical mass to justify a distinct grade.</p></div>
+    <div class="card"><h4 style="color:var(--gold)">Bloated Roles</h4><p>A single title bundles unrelated tasks from different L2 processes. The role holder is a generalist by accident, not design &mdash; making it difficult to evaluate the role consistently or plan career progression.</p></div>
   </div>
 
-  <h3 style="margin-top:2rem;color:var(--ink)">Four-Phase Hierarchy Redesign Process</h3>
+  <h3 style="margin-top:2.5rem;color:var(--ink)">The Hay Method &amp; Task-Level Data</h3>
+  <p>The <strong>Hay Method</strong> (Korn Ferry) is the most widely used job evaluation framework in financial services. It evaluates jobs on three core factors: <strong>Know-How</strong>, <strong>Problem Solving</strong>, and <strong>Accountability</strong>. Traditionally, these are assessed through job descriptions and interviews &mdash; a subjective, time-consuming process. The task inventory provides an empirical foundation for each factor.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin:1.5rem 0">
+    <div class="card" style="border-top:3px solid var(--accent)">
+      <h4 style="color:var(--accent)">Know-How</h4>
+      <p style="font-size:.9rem;color:var(--gray-500);margin-bottom:.75rem">The sum of knowledge, skills, and experience required to perform the job competently.</p>
+      <p><strong>Inventory fields that inform Know-How:</strong></p>
+      <ul style="font-size:.9rem;margin-top:.5rem">
+        <li><code>skills_required</code> &mdash; directly enumerates the technical and interpersonal skills each task demands</li>
+        <li><code>cognitive_complexity</code> &mdash; Bloom's level indicates the depth of knowledge application (recall vs. analysis vs. creation)</li>
+        <li><code>regulatory_driven</code> &mdash; regulatory tasks typically require specialized, certified knowledge (AML, OSFI, Basel)</li>
+        <li><code>onet_soc_codes</code> &mdash; links to O*NET's detailed knowledge and education requirements per occupation</li>
+      </ul>
+      <div class="example-box" style="margin-top:1rem"><h4>Hay Application</h4><p>Aggregate <code>skills_required</code> across all tasks in a role to measure the <strong>breadth</strong> of know-how. Use the maximum Bloom's level to gauge <strong>depth</strong>. Count distinct L2 processes to assess <strong>management breadth</strong>.</p></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <h4 style="color:var(--gold)">Problem Solving</h4>
+      <p style="font-size:.9rem;color:var(--gray-500);margin-bottom:.75rem">The thinking required to analyze, evaluate, reason, and arrive at conclusions within the job's environment.</p>
+      <p><strong>Inventory fields that inform Problem Solving:</strong></p>
+      <ul style="font-size:.9rem;margin-top:.5rem">
+        <li><code>cognitive_complexity</code> &mdash; Bloom's taxonomy directly measures thinking demand: levels 1&ndash;2 (routine/guided), 3&ndash;4 (analytical/applied), 5&ndash;6 (evaluative/creative)</li>
+        <li><code>task_description</code> &mdash; verb patterns reveal the thinking environment (e.g., "execute" = well-defined; "assess" = semi-variable; "design strategy" = abstract)</li>
+        <li><code>cross_functional</code> &mdash; cross-functional tasks require navigating ambiguity across organizational boundaries</li>
+        <li><code>ai_exposure_score</code> &mdash; lower scores often correlate with tasks requiring more novel, unstructured thinking</li>
+      </ul>
+      <div class="example-box" style="margin-top:1rem"><h4>Hay Application</h4><p>Map the role's Bloom's distribution to Hay's <strong>Thinking Challenge</strong> scale. Use the proportion of cross-functional tasks to assess the <strong>Thinking Environment</strong> (how much guidance or precedent exists).</p></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--green)">
+      <h4 style="color:var(--green)">Accountability</h4>
+      <p style="font-size:.9rem;color:var(--gray-500);margin-bottom:.75rem">The answerability for actions and their consequences &mdash; encompassing freedom to act, magnitude of impact, and directness of impact.</p>
+      <p><strong>Inventory fields that inform Accountability:</strong></p>
+      <ul style="font-size:.9rem;margin-top:.5rem">
+        <li><code>defense_line</code> &mdash; 1st line (direct execution/ownership), 2nd line (oversight/monitoring), 3rd line (independent assurance) map directly to freedom-to-act levels</li>
+        <li><code>importance</code> &mdash; business criticality rating (1&ndash;5) indicates the magnitude of impact if the task fails</li>
+        <li><code>regulatory_driven</code> &mdash; regulatory tasks carry external accountability to supervisors, auditors, and regulators</li>
+        <li><code>L1_function</code> / <code>L2_process</code> &mdash; the organizational scope of the task indicates whether impact is local (branch) or enterprise-wide</li>
+      </ul>
+      <div class="example-box" style="margin-top:1rem"><h4>Hay Application</h4><p>Use <code>defense_line</code> to assign <strong>Freedom to Act</strong>. Weight <code>importance</code> scores by frequency to calculate <strong>Magnitude</strong>. Assess whether the role's tasks have <strong>direct</strong> (1st line) or <strong>indirect/advisory</strong> (2nd/3rd line) impact.</p></div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:2.5rem;color:var(--ink)">Four-Phase Hierarchy Redesign Process</h3>
 
   <div class="advisory-step"><div class="step-num">1</div><div><h3>Task Cluster Analysis</h3><p>Start by grouping tasks from the inventory into natural clusters based on shared attributes, rather than inheriting current role boundaries.</p>
     <ul>
       <li><strong>By L2 Process:</strong> Which tasks belong together because they serve the same process end-to-end?</li>
-      <li><strong>By Cognitive Complexity:</strong> Separate high-judgment (Bloom 4&ndash;6) from routine execution (Bloom 1&ndash;2) &mdash; these may warrant different career levels or tracks.</li>
-      <li><strong>By AI Disposition:</strong> Tasks heading for full automation should be removed from role definitions. Remaining tasks form the human core.</li>
-      <li><strong>By Skills Required:</strong> Tasks sharing common skill profiles are natural candidates for a single role family.</li>
+      <li><strong>By Cognitive Complexity:</strong> Separate high-judgment (Bloom 4&ndash;6) from routine execution (Bloom 1&ndash;2) &mdash; these correspond to different Hay grades and should often be different roles.</li>
+      <li><strong>By Skills Required:</strong> Tasks sharing common skill profiles are natural candidates for a single role family. Shared skills = shared Know-How = same Hay job family.</li>
+      <li><strong>By Defense Line:</strong> Tasks on different defense lines carry fundamentally different accountability profiles and should not be combined in the same role.</li>
     </ul>
-    <div class="callout blue">Use the Explorer to filter by L1 + disposition. Export the results and sort by skills_required and cognitive_complexity to see natural groupings emerge.</div>
+    <div class="callout blue">Use the Explorer to filter by L1, Bloom's level, and defense line. Export the results and sort by skills_required to see natural groupings emerge. Each cluster is a candidate role.</div>
   </div></div>
 
-  <div class="advisory-step"><div class="step-num">2</div><div><h3>Role Boundary Redefinition</h3><p>Once task clusters are identified, draw new role boundaries around them. Key principles:</p>
+  <div class="advisory-step"><div class="step-num">2</div><div><h3>Role Boundary Redefinition</h3><p>Once task clusters are identified, draw new role boundaries around them and evaluate each using Hay criteria:</p>
     <ul>
-      <li><strong>Critical Mass Test:</strong> Does the redesigned role contain enough high-value tasks to justify a full-time position? If not, merge with adjacent clusters.</li>
-      <li><strong>Span of Complexity:</strong> Roles should span no more than 2&ndash;3 Bloom levels. If a role mixes Bloom 2 execution with Bloom 5 strategy, it likely needs to split into two levels.</li>
-      <li><strong>Defense Line Integrity:</strong> Avoid mixing 1st-line (execution) and 2nd-line (oversight) tasks in one role &mdash; this creates conflicts of interest.</li>
-      <li><strong>Cross-Functional Alignment:</strong> Tasks flagged as cross_functional=true may indicate roles that should sit in a shared service or center of excellence rather than within a business line.</li>
+      <li><strong>Critical Mass Test:</strong> Does the cluster contain enough tasks to justify a full-time position? If not, merge with an adjacent cluster that shares the same Know-How profile.</li>
+      <li><strong>Hay Coherence:</strong> Do all tasks in the proposed role land within 1&ndash;2 Bloom levels (Problem Solving), the same defense line (Accountability), and overlapping skill sets (Know-How)? If not, the role is trying to span too many Hay grades.</li>
+      <li><strong>Span of Complexity:</strong> Roles spanning more than 2&ndash;3 Bloom levels should split into tiered positions (e.g., Analyst vs. Senior Analyst). This directly maps to different Hay evaluation points.</li>
+      <li><strong>Cross-Functional Alignment:</strong> Tasks flagged as cross_functional=true may indicate roles that should sit in a shared service or center of excellence, which changes the Accountability profile (broader magnitude, more indirect impact).</li>
     </ul>
     <div class="example-box"><h4>Example: Retail Lending Hierarchy</h4>
       <p><strong>Current:</strong> Mortgage Intake Clerk &rarr; Mortgage Processor &rarr; Underwriter &rarr; Closing Coordinator &rarr; Post-Close Auditor (5 roles, 3 layers)</p>
-      <p><strong>Redesigned:</strong> Origination Advisor (client-facing, Bloom 4&ndash;5) + Lending Operations Specialist (process + exception, Bloom 2&ndash;3) + Credit Risk Reviewer (2nd line, Bloom 4&ndash;5). AI handles intake, doc verification, and standard decisioning. 3 roles, 2 layers.</p>
+      <p><strong>Hay Analysis:</strong> Intake and Processing tasks are Bloom 1&ndash;2 with overlapping skills. Underwriting is Bloom 4 with distinct regulatory know-how. Audit is 3rd-line with different accountability. Three natural Hay clusters, not five.</p>
+      <p><strong>Redesigned:</strong> Origination Advisor (client-facing, Bloom 4&ndash;5, 1st line) + Lending Operations Specialist (process + exception, Bloom 2&ndash;3, 1st line) + Credit Risk Reviewer (2nd/3rd line, Bloom 4&ndash;5). Three roles, two layers, each internally coherent against Hay criteria.</p>
     </div>
   </div></div>
 
-  <div class="advisory-step"><div class="step-num">3</div><div><h3>Job Family &amp; Career Level Architecture</h3><p>Organize the new roles into job families and define career progression within each:</p>
+  <div class="advisory-step"><div class="step-num">3</div><div><h3>Job Family &amp; Career Level Architecture</h3><p>Organize the new roles into job families and define Hay-aligned career progression:</p>
     <ul>
-      <li><strong>Job Families:</strong> Group roles by L1 function and shared competency domains. Each family should have a clear value proposition (e.g., &ldquo;Client Advisory,&rdquo; &ldquo;Risk &amp; Control,&rdquo; &ldquo;Data &amp; Intelligence&rdquo;).</li>
-      <li><strong>Career Levels:</strong> Use cognitive complexity as a natural leveling mechanism. Bloom 1&ndash;2 = Associate, Bloom 3 = Analyst, Bloom 4 = Senior/Specialist, Bloom 5&ndash;6 = Lead/Director.</li>
-      <li><strong>New Role Emergence:</strong> AI creates roles that don't exist today. Use dispositions to spot them: where Augment tasks cluster with high complexity and cross-functional flags, a new &ldquo;AI-Human Collaboration&rdquo; role may be needed (e.g., AI Quality Reviewer, Prompt Strategist, Automation Governance Lead).</li>
-      <li><strong>Sunset Roles:</strong> Where &gt;80% of a role's tasks are Automate disposition, the role itself is a sunset candidate. Plan redeployment paths into adjacent families.</li>
+      <li><strong>Job Families:</strong> Group roles by shared Know-How domains (skill overlap). Families might be &ldquo;Client Advisory,&rdquo; &ldquo;Risk &amp; Control,&rdquo; &ldquo;Data &amp; Intelligence,&rdquo; &ldquo;Regulatory Operations&rdquo; &mdash; defined by the skills that their constituent tasks share.</li>
+      <li><strong>Career Levels (Hay Grades):</strong> Within each family, Bloom's levels provide a natural grading structure. Bloom 1&ndash;2 tasks define entry/associate grades (lower Know-How, guided Problem Solving). Bloom 3&ndash;4 define mid-level grades (analytical Problem Solving, broader Accountability). Bloom 5&ndash;6 define senior/leadership grades (evaluative/creative thinking, enterprise-wide impact).</li>
+      <li><strong>Progression Paths:</strong> Career mobility between levels is defined by which <em>new tasks</em> the next level adds. This makes promotion criteria objective: can the person perform the higher-Bloom tasks that define the next grade?</li>
+      <li><strong>Compensation Banding:</strong> Hay evaluation points (derived from task-level Know-How, Problem Solving, and Accountability) provide a defensible, data-backed foundation for pay banding rather than market-matching by title alone.</li>
     </ul>
   </div></div>
 
   <div class="advisory-step"><div class="step-num">4</div><div><h3>Transition Mapping &amp; Governance</h3><p>The new hierarchy is a target state. Getting there requires managed transitions:</p>
     <ul>
       <li><strong>Current &rarr; Future Role Map:</strong> For each existing role, define the target role(s) it maps to. Export the Role Mapping Template from the Export Center and populate with your org's current titles.</li>
-      <li><strong>Skill Gap Analysis:</strong> Compare skills_required of the future role against current role holders. The delta defines training needs.</li>
-      <li><strong>Phased Rollout:</strong> Sequence by AI readiness. Start with functions where Automate % is highest (Operations, Retail Banking) and the hierarchy change is most obvious.</li>
-      <li><strong>Governance:</strong> Hierarchy redesign crosses HR, business lines, and risk. Establish a cross-functional steering group with sign-off authority on role changes.</li>
+      <li><strong>Hay Re-Evaluation:</strong> Use the task data to draft Hay evaluation profiles for each new role. This accelerates the traditionally manual evaluation process because the Know-How, Problem Solving, and Accountability inputs are already captured in the inventory.</li>
+      <li><strong>Skill Gap Analysis:</strong> Compare skills_required of the future role against current role holders. The delta defines training and reskilling needs.</li>
+      <li><strong>Phased Rollout:</strong> Sequence by business impact. Start with functions where role fragmentation or bloat is most severe, and where the Hay re-evaluation reveals the largest gap between current grading and task-based grading.</li>
+      <li><strong>Governance:</strong> Hierarchy redesign crosses HR, Compensation, business lines, and risk. Establish a cross-functional steering group with sign-off authority on role and grade changes.</li>
     </ul>
-    <div class="callout green"><strong>Key Principle:</strong> The hierarchy should be designed around future-state task clusters, not current headcount. Let the tasks define the roles, not the other way around.</div>
+    <div class="callout green"><strong>Key Principle:</strong> The hierarchy should be designed around task clusters evaluated against Hay criteria &mdash; not inherited titles or current headcount. Let the tasks define the roles, and let the task attributes define the grades.</div>
   </div></div>
 
-  <h3 style="margin-top:2rem;color:var(--ink)">Using the Inventory for Hierarchy Analysis</h3>
+  <h3 style="margin-top:2rem;color:var(--ink)">Using the Inventory for Hay-Aligned Hierarchy Analysis</h3>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0">
-    <div class="card"><h4>Identify Consolidation Opportunities</h4><p>Filter by L2 process and examine how many distinct primary_roles appear. If 4+ roles share the same L2 and similar Bloom levels, consolidation is likely warranted.</p></div>
-    <div class="card"><h4>Detect Layer Redundancy</h4><p>Sort by cognitive_complexity within an L1 function. If adjacent Bloom levels have identical task types, you may have unnecessary management layers.</p></div>
-    <div class="card"><h4>Spot Emerging Role Clusters</h4><p>Filter for Augment disposition + cross_functional=true + Bloom &ge;4. These tasks often cluster into new hybrid roles that span traditional boundaries.</p></div>
-    <div class="card"><h4>Validate Against Defense Lines</h4><p>Ensure the redesigned hierarchy maintains separation of duties. No role should mix 1st-line and 2nd/3rd-line tasks, which the defense_line field makes auditable.</p></div>
+    <div class="card"><h4>Identify Consolidation Opportunities</h4><p>Filter by L2 process and examine how many distinct primary_roles appear. If 4+ roles share the same L2, similar Bloom levels, and overlapping skills, they occupy the same Hay territory and consolidation is likely warranted.</p></div>
+    <div class="card"><h4>Detect Grade Misalignment</h4><p>Sort by cognitive_complexity within an L1 function. If roles at adjacent Bloom levels have identical task types and defense lines, they may be graded differently but doing the same work &mdash; a Hay evaluation would merge them.</p></div>
+    <div class="card"><h4>Map Know-How Clusters</h4><p>Export tasks and group by skills_required. Roles that share &gt;70% of their skill footprint belong in the same job family. Roles that share &lt;30% may be misclassified in the current hierarchy.</p></div>
+    <div class="card"><h4>Validate Accountability Structures</h4><p>Ensure the redesigned hierarchy maintains separation of duties. No role should mix 1st-line and 2nd/3rd-line tasks &mdash; the <code>defense_line</code> field makes this auditable and maps directly to Hay's Freedom to Act dimension.</p></div>
   </div>
+
+  <div class="callout gold" style="margin-top:1.5rem"><strong>Summary:</strong> The task inventory provides the raw material that Hay evaluations require &mdash; but captured systematically at scale rather than through role-by-role interviews. By aggregating task-level Know-How (skills, Bloom's, regulatory knowledge), Problem Solving (Bloom's distribution, cross-functional scope), and Accountability (defense line, importance, impact scope), organizations can draft Hay-aligned role evaluations directly from the data, dramatically accelerating the job architecture redesign process.</div>
 </div></section>
 
 <section class="section tab-content" id="exports"><div class="section-inner">

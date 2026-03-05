@@ -360,7 +360,11 @@ body { font-family: var(--font-sans); color: var(--ink); font-size: 15px; line-h
     <tr><td><code>source</code></td><td>String</td><td>Data provenance category</td></tr>
   </tbody></table>
   <div class="section-title" style="font-size:1.4rem;margin-top:2.5rem;">Hay Method Integration Framework</div>
-  <p style="font-size:.9rem;color:var(--gray-600);margin-bottom:1rem">This inventory is designed to inform Korn Ferry Hay Method job evaluations for hierarchy redesign. The three Hay factors map to task attributes as follows:</p>
+  <p style="font-size:.9rem;color:var(--gray-600);margin-bottom:1rem">This inventory is designed to inform Korn Ferry Hay Method job evaluations for hierarchy redesign. The framework operates at <strong>two layers</strong>: task-derived metrics (from this inventory) and job-level organizational context (from your HRIS/org structure). Both are required for accurate Hay scoring &mdash; task composition alone cannot distinguish between an analyst and a VP performing similar analytical work.</p>
+
+  <div class="callout blue" style="margin-bottom:1.5rem;font-size:.88rem"><strong>Why two layers?</strong> The Hay Method evaluates the <em>job</em>, not just its tasks. Two roles can share identical task compositions but score very differently because of organizational context: a VP &ldquo;developing strategic plans&rdquo; operates with broader scope, higher decision authority, and greater accountability than an analyst doing the same task. The job-level context layer captures this &ldquo;organizational amplifier&rdquo; that task attributes alone cannot express.</div>
+
+  <p style="font-size:.9rem;color:var(--gray-600);margin-bottom:.75rem;font-weight:600">Layer 1: Task-Derived Metrics (from this inventory)</p>
   <table class="def-table"><thead><tr><th>Hay Factor</th><th>Subfactor</th><th>Task Attribute Mapping</th><th>Formula / Approach</th></tr></thead><tbody>
     <tr><td rowspan="3"><strong>Know-How</strong><br><span style="font-size:.8rem;color:var(--gray-500)">Knowledge &amp; skill for competent performance</span></td><td>Technical Depth</td><td><code>cognitive_complexity</code> &times; skill breadth across role</td><td>Avg Bloom&rsquo;s level &times; count of unique <code>skills_required</code> per role</td></tr>
     <tr><td>Managerial Breadth</td><td>Proportion of management/planning/directing tasks</td><td>Count of supervisory/strategic tasks &divide; total role tasks</td></tr>
@@ -371,7 +375,18 @@ body { font-family: var(--font-sans); color: var(--ink); font-size: 15px; line-h
     <tr><td>Scope / Magnitude</td><td><code>importance</code> &times; <code>frequency</code></td><td>Weighted average across role tasks, scaled by L1 function materiality</td></tr>
     <tr><td>Impact</td><td><code>defense_line</code> + direct-impact proportion</td><td>1st-line direct operations &gt; 2nd-line oversight &gt; 3rd-line assurance</td></tr>
   </tbody></table>
-  <div class="callout" style="background:var(--gray-50);border-left:3px solid var(--gray-400);padding:1rem 1.25rem;margin-top:1rem;font-size:.88rem;color:var(--gray-600)"><strong>How to use for job redesign:</strong> (1) Aggregate task attributes to the role level using importance-weighted averages. (2) Map aggregated metrics to Hay factor dimensions using the table above. (3) Score roles using Hay Guide Charts to derive point values. (4) Cluster roles into job families by L1 function and similar task composition. (5) Assign job levels based on composite Hay score bands. (6) Use AI exposure scores to identify tasks for automation/augmentation, then re-score redesigned roles to project the future-state hierarchy.</div>
+
+  <p style="font-size:.9rem;color:var(--gray-600);margin-top:1.5rem;margin-bottom:.75rem;font-weight:600">Layer 2: Job-Level Organizational Context (from your HRIS / org structure)</p>
+  <table class="def-table"><thead><tr><th>Context Variable</th><th>Source</th><th>Hay Factor Impact</th><th>How It Modulates</th></tr></thead><tbody>
+    <tr><td><strong>Job Grade / Band</strong></td><td>HRIS compensation data</td><td>All three factors</td><td>Serves as a <em>validation anchor</em>, not a direct input. Compare computed Hay scores against current grades to identify over/under-graded roles. Large gaps (&gt;2 grades) flag misalignment.</td></tr>
+    <tr><td><strong>Span of Control</strong></td><td>Org chart (direct + indirect reports)</td><td>Know-How (Mgmt Breadth), Accountability (Scope)</td><td>Multiplier: 0 reports = IC baseline; 1&ndash;5 = team lead (+15%); 6&ndash;20 = manager (+30%); 20+ = senior leader (+50%). Applied to managerial breadth and scope/magnitude subfactors.</td></tr>
+    <tr><td><strong>Decision Authority Level</strong></td><td>Delegation of Authority matrix, approval limits</td><td>Accountability (Freedom to Act)</td><td>Maps approval thresholds to Hay freedom-to-act scale: prescribed (&lt;$10K) &rarr; controlled ($10K&ndash;$1M) &rarr; standardized ($1M&ndash;$50M) &rarr; broadly defined ($50M+) &rarr; strategic direction (enterprise)</td></tr>
+    <tr><td><strong>Budget / Revenue Responsibility</strong></td><td>Financial planning data, P&amp;L ownership</td><td>Accountability (Scope / Magnitude)</td><td>Hay uses geometric progression: each level ~15% larger. Map to Hay magnitude scale using ln(budget) normalization. Cost-center roles score lower than revenue-generating roles at equivalent dollar levels.</td></tr>
+    <tr><td><strong>Reporting Level</strong></td><td>Org chart (levels from CEO)</td><td>Problem Solving (Thinking Environment)</td><td>Fewer levels from CEO = less structured thinking environment, more strategic ambiguity. Maps to Hay thinking environment scale: semi-routine (6+) &rarr; patterned (4&ndash;5) &rarr; variable (3) &rarr; broadly defined (2) &rarr; abstractly defined (1)</td></tr>
+    <tr><td><strong>Cross-Functional Accountability</strong></td><td>Committee memberships, dotted-line reports, project governance roles</td><td>Know-How (Mgmt Breadth), Problem Solving</td><td>Roles accountable across multiple L1 functions score higher on managerial breadth. Count of L1 functions in scope: 1 = activity (+0), 2&ndash;3 = diverse (+15%), 4+ = broad (+30%)</td></tr>
+  </tbody></table>
+
+  <div class="callout" style="background:var(--gray-50);border-left:3px solid var(--gray-400);padding:1rem 1.25rem;margin-top:1rem;font-size:.88rem;color:var(--gray-600)"><strong>How to use for job redesign:</strong> (1) Aggregate task attributes to the role level using importance-weighted averages (Layer 1). (2) Overlay job-level context variables from HRIS (Layer 2). (3) Compute composite Hay factor scores using the combined two-layer model. (4) Compare against current grades &mdash; discrepancies reveal misgraded roles. (5) Cluster roles into job families by L1 function and similar Hay profiles. (6) Assign job levels based on Hay composite score bands (using Hay&rsquo;s ~15% geometric step progression). (7) Model the future state: remove automated tasks, recompute Layer 1, hold Layer 2 constant, identify which roles shift levels.</div>
 
   <div class="callout gold"><strong>Important:</strong> This is a reference model based on external data. It is not derived from any specific institution's internal data. Scores should be validated against your organization's actual operating model.</div>
 </div></section>
@@ -869,11 +884,17 @@ WARNING: {len(gaps)} occupations with gap >10 points — review needed")
 
 merged = role_task_map.merge(all_tasks, on='task_id')
 merged = merged.merge(
-    hris[['job_title','fte_count','grade']].drop_duplicates(),
+    hris[['job_title','fte_count','grade','direct_reports',
+          'indirect_reports','levels_from_ceo','approval_limit',
+          'budget_responsibility','l1_functions_in_scope']].drop_duplicates(),
     on='job_title'
 )
+# NOTE: If your HRIS doesn't have all columns, fill with defaults:
+# merged['direct_reports'] = merged.get('direct_reports', 0)
+# merged['approval_limit'] = merged.get('approval_limit', 10000)
+# merged['levels_from_ceo'] = merged.get('levels_from_ceo', 6)
 
-# ── 5a. Basic role aggregation ──
+# ── 5a. Basic role aggregation (Layer 1: Task-Derived) ──
 
 role_profiles = merged.groupby('job_title').agg(
     task_count=('task_id', 'count'),
@@ -976,15 +997,107 @@ def compute_accountability(role_tasks):
 
     return round(freedom * 0.30 + scope * 0.35 + impact * 0.35, 1)
 
-# ── 5e. Compute Hay factors for all roles ──
+# ── 5e. Layer 2: Job-Level Organizational Context ──
+# These variables come from HRIS, not from task attributes.
+# They modulate the task-derived Hay scores to reflect organizational
+# position — the "amplifier" that distinguishes an analyst from a VP
+# doing similar analytical work.
+
+import math
+
+def span_of_control_multiplier(direct_reports, indirect_reports=0):
+    # Hay managerial breadth scale based on total reports
+    total = (direct_reports or 0) + (indirect_reports or 0)
+    if total == 0: return 1.0       # Individual contributor
+    elif total &lt;= 5: return 1.15   # Team lead
+    elif total &lt;= 20: return 1.30  # Manager
+    elif total &lt;= 100: return 1.50 # Senior manager / Director
+    else: return 1.70               # VP / Executive
+
+def decision_authority_score(approval_limit):
+    # Map financial approval authority to Hay freedom-to-act scale (0-100)
+    # Based on Hay Guide Chart A progression
+    if approval_limit is None: return 30  # default: controlled
+    limit = float(approval_limit)
+    if limit &lt; 10_000: return 15          # Prescribed
+    elif limit &lt; 100_000: return 30       # Controlled
+    elif limit &lt; 1_000_000: return 50     # Standardized
+    elif limit &lt; 50_000_000: return 70    # Generally regulated
+    elif limit &lt; 500_000_000: return 85   # Broadly defined
+    else: return 95                        # Strategic direction
+
+def budget_magnitude_score(budget):
+    # Hay uses geometric (log) scale for magnitude
+    # Normalized to 0-100 using ln(budget) / ln(max_expected)
+    if budget is None or budget &lt;= 0: return 20
+    return min(100, round(math.log(budget) / math.log(10_000_000_000) * 100))
+
+def reporting_level_score(levels_from_ceo):
+    # Fewer levels from CEO = more abstract thinking environment
+    # Hay thinking environment scale
+    level_map = {1: 95, 2: 80, 3: 65, 4: 50, 5: 40, 6: 30}
+    return level_map.get(levels_from_ceo, max(15, 95 - levels_from_ceo * 12))
+
+def cross_functional_breadth(l1_count):
+    # Number of L1 functions in scope
+    if l1_count is None or l1_count &lt;= 1: return 1.0
+    elif l1_count &lt;= 3: return 1.15
+    else: return 1.30
+
+# ── 5f. Compute combined Hay scores (Layer 1 + Layer 2) ──
 
 hay_scores = {}
 for title in role_profiles.index:
     role_tasks = merged[merged.job_title == title]
+    row = role_profiles.loc[title]
+
+    # Layer 1: Task-derived base scores
+    kh_base = compute_know_how(role_tasks)
+    ps_base = compute_problem_solving(role_tasks)
+    ac_base = compute_accountability(role_tasks)
+
+    # Layer 2: Job-level organizational context modulation
+    span_mult = span_of_control_multiplier(
+        row.get('direct_reports', 0),
+        row.get('indirect_reports', 0))
+    xfunc_mult = cross_functional_breadth(
+        row.get('l1_functions_in_scope', 1))
+    da_score = decision_authority_score(
+        row.get('approval_limit', None))
+    bm_score = budget_magnitude_score(
+        row.get('budget_responsibility', None))
+    rl_score = reporting_level_score(
+        row.get('levels_from_ceo', 6))
+
+    # Combine: Layer 1 base * Layer 2 modulation
+    # Know-How: span of control amplifies managerial breadth,
+    # cross-functional scope amplifies overall breadth
+    kh_final = min(100, kh_base * span_mult * xfunc_mult)
+
+    # Problem Solving: reporting level modulates thinking environment
+    # (closer to CEO = more abstract/strategic thinking required)
+    ps_final = min(100, ps_base * 0.60 + rl_score * 0.40)
+
+    # Accountability: decision authority and budget replace the
+    # task-derived freedom/scope estimates with actual org data
+    ac_final = min(100,
+        ac_base * 0.30 +          # Task-derived impact
+        da_score * 0.35 +          # Decision authority (HRIS)
+        bm_score * 0.35)           # Budget magnitude (HRIS)
+
     hay_scores[title] = {
-        'know_how': compute_know_how(role_tasks),
-        'problem_solving': compute_problem_solving(role_tasks),
-        'accountability': compute_accountability(role_tasks),
+        'know_how': round(kh_final, 1),
+        'problem_solving': round(ps_final, 1),
+        'accountability': round(ac_final, 1),
+        # Keep Layer 1 scores for comparison
+        'kh_task_only': round(kh_base, 1),
+        'ps_task_only': round(ps_base, 1),
+        'ac_task_only': round(ac_base, 1),
+        # Layer 2 context values
+        'span_multiplier': span_mult,
+        'decision_authority': da_score,
+        'budget_magnitude': bm_score,
+        'reporting_level': rl_score,
     }
 
 hay_df = pd.DataFrame(hay_scores).T
@@ -994,44 +1107,78 @@ hay_df['hay_composite'] = (
     hay_df['accountability'] * 0.30
 ).round(1)
 
+# Also compute task-only composite for Layer 1 vs combined comparison
+hay_df['hay_task_only'] = (
+    hay_df['kh_task_only'] * 0.40 +
+    hay_df['ps_task_only'] * 0.30 +
+    hay_df['ac_task_only'] * 0.30
+).round(1)
+
 role_profiles = role_profiles.join(hay_df)
 
-# ── 5f. Derive job levels from composite Hay score ──
+# ── 5g. Derive job levels from composite Hay score ──
+# Using Hay's ~15% geometric step progression across levels
 
 def hay_to_level(composite):
-    if composite >= 75: return 'Director / VP'
-    elif composite >= 60: return 'Senior Manager / Lead'
-    elif composite >= 45: return 'Manager / Senior Specialist'
-    elif composite >= 30: return 'Analyst / Specialist'
+    if composite >= 80: return 'Executive / SVP'
+    elif composite >= 68: return 'Director / VP'
+    elif composite >= 56: return 'Senior Manager / Lead'
+    elif composite >= 44: return 'Manager / Senior Specialist'
+    elif composite >= 32: return 'Analyst / Specialist'
     else: return 'Associate / Coordinator'
 
 role_profiles['suggested_level'] = role_profiles.hay_composite.apply(hay_to_level)
 
-# ── 5g. Compare against current grades ──
+# ── 5h. Compare and identify misalignment ──
 
 print("
 === HAY EVALUATION SUMMARY ===")
+print(f"{'Role':<40} {'KH':>5} {'PS':>5} {'AC':>5} {'Comp':>5} "
+      f"{'Task-Only':>9} {'Δ':>4} {'Level'}")
+print("─" * 100)
 for title, p in role_profiles.iterrows():
-    delta = '⬆' if p.hay_composite > 60 and p.current_grade &lt; 10 else ''
-    print(f"{title[:40]:<40}  KH={p.know_how:>5}  PS={p.problem_solving:>5}  "
-          f"AC={p.accountability:>5}  Composite={p.hay_composite:>5}  "
-          f"Level={p.suggested_level}  {delta}")
+    delta = p.hay_composite - p.hay_task_only
+    flag = '⬆' if delta > 10 else ('⬇' if delta &lt; -5 else '')
+    print(f"{title[:40]:<40} {p.know_how:>5.0f} {p.problem_solving:>5.0f} "
+          f"{p.accountability:>5.0f} {p.hay_composite:>5.0f} "
+          f"{p.hay_task_only:>9.0f} {delta:>+4.0f} {p.suggested_level} {flag}")
 
-# ── 5h. Future-state modeling: remove automated tasks ──
+# Show where Layer 2 context makes the biggest difference
+print(f"
+Largest Layer 2 impact (org context vs task-only):")
+role_profiles['layer2_delta'] = role_profiles.hay_composite - role_profiles.hay_task_only
+top_delta = role_profiles.nlargest(10, 'layer2_delta')
+for title, p in top_delta.iterrows():
+    print(f"  {title[:45]:<45} +{p.layer2_delta:.0f} pts "
+          f"(span={p.span_multiplier:.2f}x, auth={p.decision_authority:.0f}, "
+          f"budget={p.budget_magnitude:.0f})")
+
+# ── 5i. Future-state modeling: remove automated tasks ──
+# Layer 1 (task composition) changes; Layer 2 (org context) held constant
 
 future_tasks = merged[merged.ai_disposition != 'Automate']
 print(f"
 Future-state: {len(future_tasks)} tasks remain after automation")
-print(f"Removed: {len(merged) - len(future_tasks)} tasks ({(len(merged)-len(future_tasks))/len(merged)*100:.1f}%)")
+print(f"Removed: {len(merged) - len(future_tasks)} tasks "
+      f"({(len(merged)-len(future_tasks))/len(merged)*100:.1f}%)")
 
-# Recompute Hay for future-state roles
+# Recompute Layer 1 for future state, keep Layer 2 constant
 for title in role_profiles.index:
     ft = future_tasks[future_tasks.job_title == title]
     if len(ft) > 0:
+        # Layer 1 recalculated from remaining tasks
+        kh_base = compute_know_how(ft)
+        ps_base = compute_problem_solving(ft)
+        ac_base = compute_accountability(ft)
+        # Layer 2 held constant (org context doesn't change)
+        p = role_profiles.loc[title]
+        kh_f = min(100, kh_base * p.span_multiplier *
+                   cross_functional_breadth(p.get('l1_functions_in_scope', 1)))
+        ps_f = min(100, ps_base * 0.60 + p.reporting_level * 0.40)
+        ac_f = min(100, ac_base * 0.30 + p.decision_authority * 0.35 +
+                   p.budget_magnitude * 0.35)
         role_profiles.at[title, 'future_hay'] = round(
-            compute_know_how(ft) * 0.4 +
-            compute_problem_solving(ft) * 0.3 +
-            compute_accountability(ft) * 0.3, 1)
+            kh_f * 0.4 + ps_f * 0.3 + ac_f * 0.3, 1)
     else:
         role_profiles.at[title, 'future_hay'] = 0  # role eliminated
 
@@ -1039,7 +1186,13 @@ for title in role_profiles.index:
 role_profiles['future_level'] = role_profiles.future_hay.apply(hay_to_level)
 shifted = role_profiles[role_profiles.suggested_level != role_profiles.future_level]
 print(f"
-{len(shifted)} roles shift job levels in future state")</div>
+{len(shifted)} roles shift job levels in future state")
+
+# Show which way they shift
+for title, p in shifted.iterrows():
+    direction = '↓ DOWNGRADE' if p.future_hay &lt; p.hay_composite else '↑ UPGRADE'
+    print(f"  {title[:40]:<40} {p.suggested_level} → {p.future_level} "
+          f"({p.hay_composite:.0f} → {p.future_hay:.0f}) {direction}")</div>
   </div></div>
 
   <div class="advisory-step"><div class="step-num">6</div><div><h3>Generate Hierarchy Redesign Outputs</h3>
@@ -1127,13 +1280,23 @@ for name, s in scenarios.items():
     print(f"  Top skills at risk: {', '.join(s['skills_at_risk'].index[:5])}")
 
 # ── E. Export role profiles for Hay Guide Chart input ──
-export_cols = ['task_count','fte_count','current_grade','know_how',
-    'problem_solving','accountability','hay_composite',
-    'suggested_level','future_hay','future_level',
+export_cols = ['task_count','fte_count','current_grade',
+    # Layer 1 (task-derived)
+    'kh_task_only','ps_task_only','ac_task_only','hay_task_only',
+    # Layer 2 context
+    'span_multiplier','decision_authority','budget_magnitude','reporting_level',
+    # Combined Hay scores
+    'know_how','problem_solving','accountability','hay_composite',
+    'suggested_level','layer2_delta',
+    # Future state
+    'future_hay','future_level',
+    # AI exposure
     'mean_ai_score','pct_automate','pct_e0','pct_e1','pct_e2']
-role_profiles[export_cols].to_csv('hay_evaluation_export.csv')
+export_df = role_profiles[[c for c in export_cols if c in role_profiles.columns]]
+export_df.to_csv('hay_evaluation_export.csv')
 print(f"
-Exported {len(role_profiles)} role evaluations to hay_evaluation_export.csv")</div>
+Exported {len(export_df)} role evaluations to hay_evaluation_export.csv")
+print(f"Columns: {list(export_df.columns)}")</div>
   </div></div>
 
   <div class="advisory-step"><div class="step-num">7</div><div><h3>Validate &amp; Iterate</h3>
